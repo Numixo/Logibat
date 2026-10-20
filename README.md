@@ -1,16 +1,18 @@
-# Logibat
+# Logibat — Logitech MX Battery Indicator for macOS
 
-**Your Logitech MX batteries, right in the macOS menu bar.**
+**See your MX keyboard and mouse battery percentages in the Mac menu bar, even over a Logi Bolt USB receiver.**
 
-![Logibat interface illustration: keyboard at 100%, mouse at 65%](docs/preview.svg)
+![Logibat macOS menu bar battery indicator showing a Logitech MX Keys S keyboard at 100% and MX Master 3S mouse at 65% — interface illustration](docs/preview.svg)
 
-A tiny, native Mac app that shows a keyboard icon with its battery percentage and a mouse icon with its battery percentage. Built for a quick glance, including when your devices connect through a **Logi Bolt USB receiver**.
+Logibat is a **free, open-source Logitech MX battery monitor for Mac**. It shows separate keyboard and mouse icons with battery percentages directly in the macOS menu bar. Readings have been verified with **MX Keys S** and **MX Master 3S** connected through the same **Logi Bolt USB dongle**.
 
-Free and open source. No subscription, account, telemetry, or runtime dependencies.
+The native Swift app queries your devices directly, so you do not need to open Logi Options+ to check the battery level. No subscription, account, telemetry, or runtime dependencies.
 
-## Download
+**[Download Logibat for Mac](https://github.com/Numixo/Logibat/releases/latest)** · [Tested devices](#tested-logitech-mx-devices-and-connections) · [Frequently asked questions](#frequently-asked-questions)
 
-Open **[Releases](../../releases/latest)** and download **Logibat-1.0.1-macOS-AppleSilicon.zip**.
+## Download Logibat for Mac
+
+Open **[the latest release](https://github.com/Numixo/Logibat/releases/latest)** and download **Logibat-1.0.1-macOS-AppleSilicon.zip**.
 
 - **Requires:** macOS 13 Ventura or later and an Apple silicon Mac (M-series chip).
 - **Download:** under 50 KB compressed; the app is approximately 176 KB. Sizes may change between builds.
@@ -21,7 +23,7 @@ Unzip the download, move **Logibat.app** into **Applications**, then open it. Tw
 
 macOS may initially block a downloaded app because its developer cannot be verified. Review the source and decide whether you trust the download. Apple's [guide to opening apps safely](https://support.apple.com/en-us/102445) explains the warning and available options. Logibat does not require disabling Gatekeeper or other system-wide protections.
 
-## What it does
+## Logitech keyboard and mouse battery monitoring
 
 - Shows separate keyboard and mouse icons with battery percentages.
 - Refreshes every two minutes, with another check after the Mac wakes up.
@@ -35,7 +37,7 @@ macOS may initially block a downloaded app because its developer cannot be verif
 
 The banner is an **interface illustration**, not a desktop screenshot. Its example values match the readings observed during the original hardware test.
 
-## Tested hardware
+## Tested Logitech MX devices and connections
 
 Successfully read both devices through the same **Logi Bolt USB receiver** on an Apple silicon Mac running **macOS 15.7.9**:
 
@@ -46,7 +48,7 @@ These are test readings, not fixed values or battery-life estimates.
 
 The implementation also probes Unifying receiver slots and direct Bluetooth vendor interfaces, and supports Unified Battery (`0x1004`) and older Battery Status (`0x1000`). **Unifying, direct Bluetooth, and other models have not been verified on hardware for this release.** Bluetooth works only if macOS exposes a compatible HID++ vendor interface. Devices reporting only a coarse battery level may not expose a usable exact percentage.
 
-## Using the menu
+## Check battery percentages in the macOS menu bar
 
 Click either status icon to see the detected devices and last check time.
 
@@ -64,6 +66,32 @@ If macOS denies access, select **Configure access…**. Add Logibat under **Syst
 Input Monitoring is a broad macOS permission. Logibat's implementation opens only Logitech vendor HID interfaces and registers a vendor-report callback; it does not register keyboard or pointer event listeners. Access requirements depend on the connection and macOS version: the original USB receiver test worked without a new permission grant.
 
 Rebuilding or replacing a locally signed app may require granting access again.
+
+## Frequently asked questions
+
+### How do I check my MX Master 3S battery on a Mac?
+
+Open Logibat with your mouse connected through a Logi Bolt receiver. The mouse icon shows its current battery percentage in the menu bar. Click either Logibat icon and choose **Refresh now** for a new reading. This connection has been tested with an MX Master 3S.
+
+### Can I see my MX Keys S battery percentage without opening Options+?
+
+Yes. Logibat reads the keyboard battery directly and displays its percentage beside the keyboard icon. You can keep Options+ for button assignments and other Logitech features; Logibat handles battery monitoring separately.
+
+### Does this MX battery indicator work with a USB dongle instead of Bluetooth?
+
+Yes: Logibat has been tested with an **MX Keys S keyboard and MX Master 3S mouse connected through a Logi Bolt USB receiver**. The app reads battery information from the receiver rather than relying on a Bluetooth battery display. Unifying receiver support is implemented but has not been verified on hardware.
+
+### Does Logibat support Bluetooth connections?
+
+Direct Bluetooth is unverified for this release. The implementation can query a Bluetooth device only when macOS exposes a compatible HID++ vendor interface. The tested configuration uses the Logi Bolt dongle.
+
+### Is Logibat free, and which Macs can run it?
+
+Logibat is free to download and use under the MIT license, with no subscription or in-app purchases. The published app requires **macOS 13 or later and Apple silicon (an M-series Mac)**. The downloadable release does not support Intel Macs.
+
+### Why does the battery indicator show a dash instead of a percentage?
+
+A dash means the latest check did not produce a battery reading. Wake or turn on the device, check the receiver connection, then choose **Refresh now**. If macOS denies device access, follow the [permissions instructions](#permissions). A sleeping or disconnected device is not shown with an old reading as if it were current.
 
 ## Build from source
 
