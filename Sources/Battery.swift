@@ -151,7 +151,7 @@ func scanBatteries() -> ScanResult {
             }
         }
         if ProcessInfo.processInfo.arguments.contains("--diagnose") {
-            print("Interface: \(name), \(transport), pagina \(String(page, radix: 16)), open=\(channel.opened)")
+            print("Interface: \(name), \(transport), page \(String(page, radix: 16)), open=\(channel.opened)")
         }
     }
     return result

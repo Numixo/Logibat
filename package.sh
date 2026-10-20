@@ -9,7 +9,8 @@ case "$APP_ARCH" in
     x86_64) LABEL=Intel ;;
     *) echo "Unsupported architecture: $APP_ARCH" >&2; exit 1 ;;
 esac
-ARCHIVE="Logibat-1.0-macOS-$LABEL.zip"
+VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Info.plist)"
+ARCHIVE="Logibat-$VERSION-macOS-$LABEL.zip"
 codesign --verify --strict Logibat.app
 plutil -lint Logibat.app/Contents/Info.plist
 ditto -c -k --sequesterRsrc --keepParent Logibat.app "dist/$ARCHIVE"

@@ -5,11 +5,11 @@
 <key>CFBundleIdentifier</key><string>nl.local.Logibat</string>
 <key>CFBundleName</key><string>Logibat</string>
 <key>CFBundleDisplayName</key><string>Logibat</string>
-<key>CFBundleVersion</key><string>1</string>
-<key>CFBundleShortVersionString</key><string>1.0</string>
+<key>CFBundleVersion</key><string>2</string>
+<key>CFBundleShortVersionString</key><string>1.0.1</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>
-<key>NSInputMonitoringUsageDescription</key><string>Logibat vraagt uitsluitend batterijgegevens op bij je Logitech-muis en -toetsenbord.</string>
+<key>NSInputMonitoringUsageDescription</key><string>Logibat only requests battery data from your Logitech mouse and keyboard.</string>
 </dict></plist>

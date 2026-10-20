@@ -12,10 +12,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         guard NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "nl.local.Logibat").count <= 1 else {
             NSApp.terminate(nil); return
         }
-        for kind in ["keyboard", "mouse"] {
+        // macOS places newly inserted status items to the left of earlier ones.
+        for kind in ["mouse", "keyboard"] {
             let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
             items[kind] = item
-            item.button?.image = NSImage(systemSymbolName: kind == "keyboard" ? "keyboard" : "computermouse", accessibilityDescription: kind == "keyboard" ? "Toetsenbord" : "Muis")
+            item.button?.image = deviceIcon(kind)
             item.button?.imagePosition = .imageLeading
             item.button?.font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
             item.button?.title = " —"
@@ -53,7 +54,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             let value = reading.map { "\($0.approximate ? "≈" : "")\($0.percent)%\($0.charging ? "ϟ" : "")" } ?? "—"
             item.button?.title = " " + value
             item.button?.contentTintColor = (reading?.percent ?? 100) <= 15 ? .systemOrange : nil
-            item.button?.toolTip = reading.map { "\($0.name): \(value)" } ?? "\(kind == "keyboard" ? "Toetsenbord" : "Muis"): geen batterijgegevens"
+            item.button?.toolTip = reading.map { "\($0.name): \(value)" } ?? "\(kind == "keyboard" ? "Keyboard" : "Mouse"): no battery data"
             item.button?.setAccessibilityLabel(item.button?.toolTip)
         }
     }
@@ -64,38 +65,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         title.isEnabled = false
         menu.addItem(title)
         if lastScan.readings.isEmpty {
-            menu.addItem(withTitle: lastScan.permissionDenied ? "Toegang tot Logitech vereist" : "Geen actieve MX-apparaten gevonden", action: nil, keyEquivalent: "")
-            menu.addItem(withTitle: "Zet je muis en toetsenbord aan en ververs.", action: nil, keyEquivalent: "")
+            menu.addItem(withTitle: lastScan.permissionDenied ? "Logitech access required" : "No active MX devices found", action: nil, keyEquivalent: "")
+            menu.addItem(withTitle: "Wake your mouse and keyboard, then refresh.", action: nil, keyEquivalent: "")
         }
         for reading in lastScan.readings {
-            let label = "\(reading.name) · \(reading.approximate ? "≈" : "")\(reading.percent)%\(reading.charging ? " · laadt op" : "")"
+            let label = "\(reading.name) · \(reading.approximate ? "≈" : "")\(reading.percent)%\(reading.charging ? " · charging" : "")"
             let row = NSMenuItem(title: label, action: nil, keyEquivalent: "")
-            row.image = NSImage(systemSymbolName: reading.kind == "keyboard" ? "keyboard" : "computermouse", accessibilityDescription: nil)
+            row.image = deviceIcon(reading.kind)
             menu.addItem(row)
         }
         if let date = checkedAt {
-            menu.addItem(withTitle: "Gecontroleerd om \(date.formatted(date: .omitted, time: .shortened)) · elke 2 minuten", action: nil, keyEquivalent: "")
+            menu.addItem(withTitle: "Checked at \(date.formatted(date: .omitted, time: .shortened)) · every 2 minutes", action: nil, keyEquivalent: "")
         }
         menu.addItem(.separator())
-        let refreshItem = menu.addItem(withTitle: scanning ? "Bezig met uitlezen…" : "Nu verversen", action: #selector(refresh), keyEquivalent: "r")
+        let refreshItem = menu.addItem(withTitle: scanning ? "Reading batteries…" : "Refresh now", action: #selector(refresh), keyEquivalent: "r")
         refreshItem.target = self
         refreshItem.isEnabled = !scanning
-        let permission = menu.addItem(withTitle: "Toegang instellen…", action: #selector(openPermissions), keyEquivalent: "")
+        let permission = menu.addItem(withTitle: "Configure access…", action: #selector(openPermissions), keyEquivalent: "")
         permission.target = self
-        let login = menu.addItem(withTitle: "Start bij inloggen", action: #selector(toggleLogin), keyEquivalent: "")
+        let login = menu.addItem(withTitle: "Launch at login", action: #selector(toggleLogin), keyEquivalent: "")
         login.target = self
         login.state = SMAppService.mainApp.status == .enabled ? .on : .off
         menu.addItem(.separator())
-        let quit = menu.addItem(withTitle: "Stop Logibat", action: #selector(quit), keyEquivalent: "q")
+        let quit = menu.addItem(withTitle: "Quit Logibat", action: #selector(quit), keyEquivalent: "q")
         quit.target = self
     }
 
     @objc private func openPermissions() {
         let alert = NSAlert()
-        alert.messageText = "Geef Logibat toegang tot je Logitech-apparaten"
-        alert.informativeText = "Voeg Logibat.app toe bij Systeeminstellingen → Privacy en beveiliging → Invoermonitoring en schakel de app in. Stop en open Logibat daarna opnieuw.\n\nLogibat leest uitsluitend Logitech-batterijgegevens via de vendor-interface; het registreert geen toetsaanslagen."
-        alert.addButton(withTitle: "Open instellingen")
-        alert.addButton(withTitle: "Annuleer")
+        alert.messageText = "Allow Logibat to access your Logitech devices"
+        alert.informativeText = "Add Logibat.app under System Settings → Privacy & Security → Input Monitoring and enable it. Then quit and reopen Logibat.\n\nLogibat only reads Logitech battery data through the vendor interface; it does not record keystrokes."
+        alert.addButton(withTitle: "Open settings")
+        alert.addButton(withTitle: "Cancel")
         if alert.runModal() == .alertFirstButtonReturn {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent")!)
             NSWorkspace.shared.activateFileViewerSelecting([Bundle.main.bundleURL])
@@ -108,7 +109,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             else { try SMAppService.mainApp.register() }
         } catch {
             let alert = NSAlert()
-            alert.messageText = "Automatisch starten kon niet worden gewijzigd"
+            alert.messageText = "Could not change launch at login"
             alert.informativeText = error.localizedDescription
             alert.runModal()
         }
@@ -118,7 +119,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
 if CommandLine.arguments.contains("--diagnose") {
     let result = scanBatteries()
-    print("Interfaces: \(result.interfaces), toestemming nodig: \(result.permissionDenied)")
+    print("Interfaces: \(result.interfaces), permission required: \(result.permissionDenied)")
     let data = try JSONEncoder().encode(result.readings)
     print(String(data: data, encoding: .utf8)!)
 } else {

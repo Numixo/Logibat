@@ -10,14 +10,14 @@ Free and open source. No subscription, account, telemetry, or runtime dependenci
 
 ## Download
 
-Open **[Releases](../../releases/latest)** and download **Logibat-1.0-macOS-AppleSilicon.zip**.
+Open **[Releases](../../releases/latest)** and download **Logibat-1.0.1-macOS-AppleSilicon.zip**.
 
 - **Requires:** macOS 13 Ventura or later and an Apple silicon Mac (M-series chip).
-- **Download:** approximately 43 KB compressed; the app is approximately 176 KB. Sizes may change between builds.
+- **Download:** under 50 KB compressed; the app is approximately 176 KB. Sizes may change between builds.
 - **Memory:** approximately 18 MB in one local idle measurement; usage varies by Mac and system state.
 - **Release status:** an initial community release, locally signed and **not notarized by Apple**.
 
-Unzip the download, move **Logibat.app** into **Applications**, then open it. Two status items appear in the menu bar; there is no Dock icon. The current app menus are in Dutch. This guide includes the English equivalents below.
+Unzip the download, move **Logibat.app** into **Applications**, then open it. Two status items appear in the menu bar; there is no Dock icon. All app menus, tooltips, and access instructions are in English.
 
 macOS may initially block a downloaded app because its developer cannot be verified. Review the source and decide whether you trust the download. Apple's [guide to opening apps safely](https://support.apple.com/en-us/102445) explains the warning and available options. Logibat does not require disabling Gatekeeper or other system-wide protections.
 
@@ -25,6 +25,7 @@ macOS may initially block a downloaded app because its developer cannot be verif
 
 - Shows separate keyboard and mouse icons with battery percentages.
 - Refreshes every two minutes, with another check after the Mac wakes up.
+- Uses custom outline icons matching the project illustration.
 - Adds a charging indicator while a device is charging.
 - Highlights a low battery in orange at 15% or below.
 - Offers a manual refresh and an optional launch-at-login setting.
@@ -49,16 +50,16 @@ The implementation also probes Unifying receiver slots and direct Bluetooth vend
 
 Click either status icon to see the detected devices and last check time.
 
-- **Nu verversen** — Refresh now.
-- **Start bij inloggen** — Launch at login.
-- **Toegang instellen…** — Configure access.
-- **Stop Logibat** — Quit Logibat.
+- **Refresh now** — Read both batteries now.
+- **Launch at login** — Start Logibat automatically when you sign in.
+- **Configure access…** — Open the access instructions.
+- **Quit Logibat** — Stop the app.
 
 If the menu bar shows a dash, no current reading was available. Wake or switch on the device and refresh. Unavailable devices do not keep displaying an old percentage as if it were current. With more than one detected device of a type, the status item shows the lowest reported percentage.
 
 ## Permissions
 
-If macOS denies access, select **Toegang instellen…**. Add Logibat under **System Settings → Privacy & Security → Input Monitoring**, enable it, then quit and reopen Logibat. Put the app in its final location before granting permission or enabling launch at login.
+If macOS denies access, select **Configure access…**. Add Logibat under **System Settings → Privacy & Security → Input Monitoring**, enable it, then quit and reopen Logibat. Put the app in its final location before granting permission or enabling launch at login.
 
 Input Monitoring is a broad macOS permission. Logibat's implementation opens only Logitech vendor HID interfaces and registers a vendor-report callback; it does not register keyboard or pointer event listeners. Access requirements depend on the connection and macOS version: the original USB receiver test worked without a new permission grant.
 
