@@ -10,6 +10,8 @@ The native Swift app queries your devices directly, so you do not need to open L
 
 **[Download Logibat for Mac](https://github.com/Numixo/Logibat/releases/latest)** · [Tested devices](#tested-logitech-mx-devices-and-connections) · [Frequently asked questions](#frequently-asked-questions)
 
+<a id="download"></a>
+
 ## Download Logibat for Mac
 
 Open **[the latest release](https://github.com/Numixo/Logibat/releases/latest)** and download **Logibat-1.0.1-macOS-AppleSilicon.zip**.
@@ -22,6 +24,8 @@ Open **[the latest release](https://github.com/Numixo/Logibat/releases/latest)**
 Unzip the download, move **Logibat.app** into **Applications**, then open it. Two status items appear in the menu bar; there is no Dock icon. All app menus, tooltips, and access instructions are in English.
 
 macOS may initially block a downloaded app because its developer cannot be verified. Review the source and decide whether you trust the download. Apple's [guide to opening apps safely](https://support.apple.com/en-us/102445) explains the warning and available options. Logibat does not require disabling Gatekeeper or other system-wide protections.
+
+<a id="what-it-does"></a>
 
 ## Logitech keyboard and mouse battery monitoring
 
@@ -37,6 +41,8 @@ macOS may initially block a downloaded app because its developer cannot be verif
 
 The banner is an **interface illustration**, not a desktop screenshot. Its example values match the readings observed during the original hardware test.
 
+<a id="tested-hardware"></a>
+
 ## Tested Logitech MX devices and connections
 
 Successfully read both devices through the same **Logi Bolt USB receiver** on an Apple silicon Mac running **macOS 15.7.9**:
@@ -47,6 +53,8 @@ Successfully read both devices through the same **Logi Bolt USB receiver** on an
 These are test readings, not fixed values or battery-life estimates.
 
 The implementation also probes Unifying receiver slots and direct Bluetooth vendor interfaces, and supports Unified Battery (`0x1004`) and older Battery Status (`0x1000`). **Unifying, direct Bluetooth, and other models have not been verified on hardware for this release.** Bluetooth works only if macOS exposes a compatible HID++ vendor interface. Devices reporting only a coarse battery level may not expose a usable exact percentage.
+
+<a id="using-the-menu"></a>
 
 ## Check battery percentages in the macOS menu bar
 
